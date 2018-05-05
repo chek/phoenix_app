@@ -13,7 +13,7 @@
 
   <body>
     <div class="container">
-      <header class="header">
+      <!--header class="header">
         <nav role="navigation">
           <ul class="nav nav-pills pull-right">
             <li><a href="http://www.phoenixframework.org/docs">Get Started</a></li>
@@ -23,7 +23,7 @@
       </header>
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p!-->
 
       <main role="main">
         <%= render @view_module, @view_template, assigns %>
@@ -31,5 +31,9 @@
 
     </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
   </body>
 </html>

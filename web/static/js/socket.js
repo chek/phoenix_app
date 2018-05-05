@@ -54,9 +54,33 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
+let channel = socket.channel("room:main", {})
 channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
+  .receive("ok", resp => { 
+    console.log("Joined successfully", resp) 
+    onJoin()
+  })
   .receive("error", resp => { console.log("Unable to join", resp) })
+
+channel.on("location", payload => {
+  //let messageItem = document.createElement("li")
+  //messageItem.innerText = `[${Date()}] ${payload.body}`
+  //messagesContainer.appendChild(messageItem)
+  console.log('On location')
+  console.log(payload.body)
+})
+/*
+channel.on("connect", payload => {
+  //let messageItem = document.createElement("li")
+  //messageItem.innerText = `[${Date()}] ${payload.body}`
+  //messagesContainer.appendChild(messageItem)
+  console.log('On connect')
+  console.log(payload.body)
+})
+*/
+function onJoin() {
+  console.log('Socket')
+  channel.push("location", {body: '1111111'})
+}
 
 export default socket
