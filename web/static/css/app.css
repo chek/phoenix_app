@@ -1,1 +1,34 @@
 /* This file is for your main application css. */
+body {
+    background-color: #EFF0F4;
+}
+#chat {
+    height: 90vh;
+    border: 1px solid #74DBEF;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+}
+#chat-body {
+    flex-grow: 1;
+    padding: 10px;
+}
+#chat-input {
+    border-top: 1px solid #74DBEF;
+    height: 100px;
+}
+.msg-container {
+    margin-bottom: 10px;
+}
+.msg-header {
+    color: #0074E4;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+.msg-header span {
+    color: #74DBEF;
+    font-size: 14px;
+}
+.msg-text {
+    color: #264E86;
+}

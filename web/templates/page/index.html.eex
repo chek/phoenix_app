@@ -34,6 +34,9 @@
     </ul>
   </div>
 </div-->
-<div id="connect">
-  <a class='btn btn-primary'>Connect</a>
+<div id="chat" style="">
+  <div id="chat-body">
+  </div>
+  <div id="chat-input">
+  </div>
 </div>
