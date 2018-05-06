@@ -19,6 +19,20 @@ defmodule PhoenixApp.RoomChannel do
         {:noreply, socket}
     end    
 
+    def handle_in("message", %{"message" => message}, socket) do
+        IO.puts 'handle message msg'
+        #socket = assign(socket, :uuid, uuid)
+        #IO.puts 'new uuid'
+        #IO.puts socket.assigns.uuid
+        #Chat.Registry.create(Chat.Registry, uuid)
+        {:ok, user} = Chat.Registry.lookup(Chat.Registry, socket.assigns.uuid)
+        location = Chat.User.get(user, "location")
+        
+        params = %{uuid: socket.assigns.uuid, location: location, message: message}
+        broadcast! socket, "message", %{params: params}
+        {:noreply, socket}
+    end    
+
     def handle_in("location", %{"location" => location}, socket) do
         IO.puts 'handle location msg'
         #socket = assign(socket, :uuid, uuid)

@@ -16,6 +16,14 @@ body {
 #chat-input {
     border-top: 1px solid #74DBEF;
     height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px
+}
+#chat-input input {
+    width: 95%;
+    height: 80%
 }
 .msg-container {
     margin-bottom: 10px;

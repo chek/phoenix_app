@@ -75,6 +75,11 @@ channel.on("location", payload => {
     console.log(payload)
     addChatMessage(payload.params.uuid, 'Got location', payload.params.location)  
 })
+channel.on("message", payload => {
+    console.log('on message')
+    console.log(payload)
+    addChatMessage(payload.params.uuid, payload.params.message, payload.params.location)  
+})
 
 function onChannelJoin() {
   const cachedUuid = localStorage.getItem('uuid')
@@ -93,7 +98,29 @@ function getGeolocation() {
       (position) => {
         console.log('successGeolocation 2')
         let coords = [position.coords.latitude, position.coords.longitude]
-        channel.push("location", {location: coords})
+
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+               if (xmlhttp.status == 200) {
+                   //document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
+                   console.log('ogog done')
+                   var obj = JSON.parse(xmlhttp.responseText)
+                   //console.log(obj.results[0].formatted_address)
+                   channel.push("location", {location: obj.results[0].formatted_address})
+                  }
+               else if (xmlhttp.status == 400) {
+                console.log('There was an error 400');
+               }
+               else {
+                console.log('something else other than 200 was returned');
+               }
+            }
+        };
+        const url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude + "&sensor=true"
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+
       },
       () => {
         console.log('errGeolocation')
@@ -125,7 +152,14 @@ function addChatMessage(name, message, location) {
 
   chatBody.appendChild(msgContainer) 
 }
-
+const chatInput = document.getElementById("chat-input-text")
+chatInput.onkeypress = function(e){
+  if (e.which == 13 || e.keyCode == 13) {
+    channel.push("message", {message: chatInput.value})
+    chatInput.value = ''    
+    return false;
+  }  
+}
 function guid() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
