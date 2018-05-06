@@ -98,7 +98,12 @@ function onGetLocation(position) {
     if (xmlhttp.readyState == XMLHttpRequest.DONE) {
       if (xmlhttp.status == 200) {
         var obj = JSON.parse(xmlhttp.responseText)
-        channel.push("location", {location: obj.results[0].formatted_address})
+        if (typeof obj.results[0] !== 'undefined') {
+          channel.push("location", {location: obj.results[0].formatted_address})
+        } else {
+          const location = position.coords.latitude + "," + position.coords.longitude 
+          channel.push("location", {location: location})
+        }
       } else if (xmlhttp.status == 400) {
         console.log('There was an error 400')
       } else {
