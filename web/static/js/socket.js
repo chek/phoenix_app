@@ -119,7 +119,7 @@ function addChatMessage(name, message, location) {
   var msgHeader = document.createElement("div")
   msgHeader.classList.add("msg-header")
   if (name === localStorage.getItem('uuid')) name = 'You'
-  if (typeof location !== 'undefined') {
+  if (typeof location !== 'undefined' && location !== null) {
     msgHeader.innerHTML=name + " <span>" + location + "</span>"
   } else {
     msgHeader.textContent=name
