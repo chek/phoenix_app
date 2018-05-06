@@ -56,28 +56,17 @@ socket.connect()
 // Now that you are connected, you can join channels with a topic:
 let channel = socket.channel("room:main", {})
 channel.join()
-  .receive("ok", resp => { 
-    console.log("Joined successfully", resp) 
-    onChannelJoin()
-  })
+  .receive("ok", resp => { onChannelJoin()})
   .receive("error", resp => { console.log("Unable to join", resp) })
 
 channel.on("connect", payload => {
-  //console.log(payload.params)
-  if (payload.params.uuid === localStorage.getItem('uuid')) {
-    console.log(payload)
-    getGeolocation()
-  }
+  if (payload.params.uuid === localStorage.getItem('uuid')) getGeolocation()
   addChatMessage(payload.params.uuid, 'Connected')  
 })
 channel.on("location", payload => {
-    console.log('on location')
-    console.log(payload)
     addChatMessage(payload.params.uuid, 'Got location', payload.params.location)  
 })
 channel.on("message", payload => {
-    console.log('on message')
-    console.log(payload)
     addChatMessage(payload.params.uuid, payload.params.message, payload.params.location)  
 })
 
@@ -90,37 +79,10 @@ function onChannelJoin() {
 }
 
 function getGeolocation() {
-  console.log('getGeolocation')
   if (navigator.geolocation) {
-    console.log('getGeolocation 1')
-    //console.log($('#connect').length)
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log('successGeolocation 2')
-        let coords = [position.coords.latitude, position.coords.longitude]
-
-        let xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
-               if (xmlhttp.status == 200) {
-                   //document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
-                   console.log('ogog done')
-                   var obj = JSON.parse(xmlhttp.responseText)
-                   //console.log(obj.results[0].formatted_address)
-                   channel.push("location", {location: obj.results[0].formatted_address})
-                  }
-               else if (xmlhttp.status == 400) {
-                console.log('There was an error 400');
-               }
-               else {
-                console.log('something else other than 200 was returned');
-               }
-            }
-        };
-        const url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude + "&sensor=true"
-        xmlhttp.open("GET", url, true);
-        xmlhttp.send();
-
+        onGetLocation(position)
       },
       () => {
         console.log('errGeolocation')
@@ -130,14 +92,33 @@ function getGeolocation() {
   }
 }
 
+function onGetLocation(position) {
+  let xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+      if (xmlhttp.status == 200) {
+        var obj = JSON.parse(xmlhttp.responseText)
+        channel.push("location", {location: obj.results[0].formatted_address})
+      } else if (xmlhttp.status == 400) {
+        console.log('There was an error 400')
+      } else {
+        console.log('something else other than 200 was returned');
+      }
+    }
+  }
+  const url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude + "&sensor=true"
+  xmlhttp.open("GET", url, true)
+  xmlhttp.send()
+}
+
 function addChatMessage(name, message, location) {
   const chatBody = document.getElementById("chat-body")
-
   var msgContainer = document.createElement("div")
   msgContainer.classList.add("msg-container")
 
   var msgHeader = document.createElement("div")
   msgHeader.classList.add("msg-header")
+  if (name === localStorage.getItem('uuid')) name = 'You'
   if (typeof location !== 'undefined') {
     msgHeader.innerHTML=name + " <span>" + location + "</span>"
   } else {
@@ -152,7 +133,9 @@ function addChatMessage(name, message, location) {
 
   chatBody.appendChild(msgContainer) 
 }
+
 const chatInput = document.getElementById("chat-input-text")
+
 chatInput.onkeypress = function(e){
   if (e.which == 13 || e.keyCode == 13) {
     channel.push("message", {message: chatInput.value})
@@ -160,6 +143,7 @@ chatInput.onkeypress = function(e){
     return false;
   }  
 }
+
 function guid() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -168,6 +152,5 @@ function guid() {
   }
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
-//https://stackoverflow.com/questions/19511597/how-to-get-address-location-from-latitude-and-longitude-in-google-map
-//https://stackoverflow.com/questions/37120226/how-can-i-reply-directly-to-a-users-message-using-phoenix-channels
+
 export default socket
