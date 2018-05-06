@@ -15,16 +15,13 @@ To start your Phoenix app:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-On start browser will ask to allow location information, please click allow.
-Anyway sometimes some browsers have some problem to provide this info.
+On start browser will ask to allow location information.
+Anyway sometimes some browsers have problem to provide this info.
 In this case your user will appear in chat without location.
 
 You can open this url in different browsers so the app will see it as different users
 and you can chat with your self.
 
-
-
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
 
 ## Learn more
 
