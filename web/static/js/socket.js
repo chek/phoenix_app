@@ -132,6 +132,7 @@ function addChatMessage(name, message, location) {
   msgContainer.appendChild(msgText) 
 
   chatBody.appendChild(msgContainer) 
+  chatBody.scrollTop = chatBody.scrollHeight
 }
 
 const chatInput = document.getElementById("chat-input-text")
