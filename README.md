@@ -19,8 +19,8 @@ On start browser will ask to allow location information, please click allow.
 Anyway sometimes some browsers have some problem to provide this info.
 In this case your user will appear in chat without location.
 
-You can open this url in different browsers so the app will see it as different users,
-so you can chat with your self.
+You can open this url in different browsers so the app will see it as different users
+and you can chat with your self.
 
 
 
